@@ -9,7 +9,6 @@ const productsRoutes = require('./modules/products/products.routes');
 
 const app = express();
 
-// Helmet con CSP personalizado para permitir que Swagger cargue sus scripts
 app.use(
   helmet({
     contentSecurityPolicy: {
@@ -32,6 +31,10 @@ app.get('/api-docs/swagger.json', (req, res) => {
 });
 
 app.get('/api-docs', (req, res) => {
+  const swaggerJsonUrl = process.env.NODE_ENV === 'production'
+    ? 'https://api-rest-production-44e6.up.railway.app/api-docs/swagger.json'
+    : 'http://localhost:3000/api-docs/swagger.json';
+
   res.setHeader('Content-Type', 'text/html');
   res.send(`<!DOCTYPE html>
 <html>
@@ -47,7 +50,7 @@ app.get('/api-docs', (req, res) => {
     <script>
       window.onload = function() {
         SwaggerUIBundle({
-          url: "http://localhost:3000/api-docs/swagger.json",
+          url: "${swaggerJsonUrl}",
           dom_id: '#swagger-ui',
           presets: [SwaggerUIBundle.presets.apis],
           layout: "BaseLayout"

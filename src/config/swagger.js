@@ -10,8 +10,10 @@ const options = {
     },
     servers: [
       {
-        url: 'http://localhost:3000',
-        description: 'Desarrollo',
+        url: process.env.NODE_ENV === 'production'
+          ? 'https://api-rest-production-44e6.up.railway.app'
+          : 'http://localhost:3000',
+        description: process.env.NODE_ENV === 'production' ? 'Producción' : 'Desarrollo',
       },
     ],
     components: {
@@ -28,7 +30,6 @@ const options = {
   apis: ['./src/modules/**/*.routes.js'],
 };
 
-// swagger-jsdoc puede exportar como función directa o con .default
 const swaggerSpec = swaggerJsdoc(options);
 
 module.exports = swaggerSpec;
